@@ -10,3 +10,8 @@ variable "private_subnets_cidr_blocks" { type = "map" }
 variable "public_subnets_cidr_blocks" { type = "map" }
 variable "load_balancer_security_group_id" {}
 variable "appserver_security_group_id" {}
+
+variable "nat_gateway_enabled" {
+    description = "set to 1 to create nat gateway instances for private subnets"
+    default = 0
+}

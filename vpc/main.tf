@@ -29,6 +29,7 @@ resource "aws_route" "internet_access" {
 # NAT instance with elastic ip
 
 resource "aws_nat_gateway" "nat" {
+  count         = "${var.nat_gateway_enabled}"
   allocation_id = "${var.nat_eip_allocation_id}"
   subnet_id     = "${aws_subnet.public_subnet.0.id}"
   depends_on    = ["aws_internet_gateway.default_ig"]
