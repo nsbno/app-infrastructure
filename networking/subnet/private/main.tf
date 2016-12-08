@@ -31,9 +31,3 @@ resource "aws_route_table_association" "eu-central-1b-private" {
     route_table_id = "${aws_route_table.eu-central-private.id}"
 }
 
-resource "aws_db_subnet_group" "db" {
-  depends_on  = ["aws_subnet.private_subnet"]
-  name        = "db_subnet_group"
-  description = "DB subnet group"
-  subnet_ids  = ["${aws_subnet.private_subnet.*.id}"]
-}
