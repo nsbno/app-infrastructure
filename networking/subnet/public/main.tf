@@ -11,14 +11,3 @@ resource "aws_subnet" "public_subnet" {
   tags { Name = "Public subnet, zone ${count.index}" }
 }
 
-resource "aws_route_table" "public-route-table" {
-    vpc_id = "${var.vpc_id}"
-
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = "${var.internet_gateway_id}"
-    }
-
-    tags { Name = "Public subnets route table" }
-}
-

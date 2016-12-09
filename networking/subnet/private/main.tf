@@ -10,14 +10,3 @@ resource "aws_subnet" "private_subnet" {
     tags { Name = "Private subnet, zone ${count.index}" }
 }
 
-resource "aws_route_table" "private-route-table" {
-    vpc_id      = "${var.vpc_id}"
-
-    route {
-        cidr_block     = "0.0.0.0/0"
-        nat_gateway_id = "${var.nat_id}"
-    }
-
-    tags { Name = "Private subnets route table" }
-}
-
