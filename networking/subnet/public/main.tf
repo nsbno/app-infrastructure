@@ -11,7 +11,7 @@ resource "aws_subnet" "public_subnet" {
   tags { Name = "Public subnet, zone ${count.index}" }
 }
 
-resource "aws_route_table" "eu-central-1a-public" {
+resource "aws_route_table" "public-route-table" {
     vpc_id = "${var.vpc_id}"
 
     route {
@@ -22,7 +22,3 @@ resource "aws_route_table" "eu-central-1a-public" {
     tags { Name = "Public subnets route table" }
 }
 
-resource "aws_route_table_association" "eu-central-1a-public" {
-    subnet_id      = "${aws_subnet.public_subnet.0.id}"
-    route_table_id = "${aws_route_table.eu-central-1a-public.id}"
-}

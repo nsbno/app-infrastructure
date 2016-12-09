@@ -10,7 +10,7 @@ resource "aws_subnet" "private_subnet" {
     tags { Name = "Private subnet, zone ${count.index}" }
 }
 
-resource "aws_route_table" "eu-central-private" {
+resource "aws_route_table" "private-route-table" {
     vpc_id      = "${var.vpc_id}"
 
     route {
@@ -19,15 +19,5 @@ resource "aws_route_table" "eu-central-private" {
     }
 
     tags { Name = "Private subnets route table" }
-}
-
-resource "aws_route_table_association" "eu-central-1a-private" {
-    subnet_id      = "${aws_subnet.private_subnet.0.id}"
-    route_table_id = "${aws_route_table.eu-central-private.id}"
-}
-
-resource "aws_route_table_association" "eu-central-1b-private" {
-    subnet_id      = "${aws_subnet.private_subnet.1.id}"
-    route_table_id = "${aws_route_table.eu-central-private.id}"
 }
 
