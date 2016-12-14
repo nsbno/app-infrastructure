@@ -21,10 +21,4 @@ resource "aws_security_group" "load_balancer" {
         cidr_blocks = ["0.0.0.0/0"]
     }
 
-    egress {
-        from_port       = 80
-        to_port         = 80
-        protocol        = "tcp"
-        security_groups = ["${var.appserver_security_group_id}"]
-    }
 }

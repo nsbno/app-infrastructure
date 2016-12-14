@@ -12,4 +12,3 @@ variable "app_ids" { type = "list" }
 
 # Security groups
 variable "elb_sg" {}
-variable "appserver_security_group_id" {}
