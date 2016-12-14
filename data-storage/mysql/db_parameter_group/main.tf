@@ -1,4 +1,4 @@
-resource "aws_db_parameter_group" "default" {
+resource "aws_db_parameter_group" "db_parameter_group" {
     name   = "${var.db_parameter_group_name}"
     family = "${var.db_family}"
 
