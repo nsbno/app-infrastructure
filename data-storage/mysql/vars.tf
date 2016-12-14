@@ -8,8 +8,6 @@ variable "db_storage" {}
 
 variable "db_engine" {}
 
-variable "db_family" {}
-
 variable "db_engine_version" {}
 
 variable "db_instance_class" {}
@@ -24,4 +22,4 @@ variable "vpc_id" {}
 
 variable "db_sg_name" {}
 
-variable "appserver_security_group_id" {}
+variable "security_group_id" {}

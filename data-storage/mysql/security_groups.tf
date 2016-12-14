@@ -11,6 +11,6 @@ resource "aws_security_group" "db" {
         from_port       = 3306
         to_port         = 3306
         protocol        = "tcp"
-        security_groups = ["${var.appserver_security_group_id}"]
+        security_groups = ["${var.security_group_id}"]
     }
 }
