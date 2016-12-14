@@ -22,4 +22,3 @@ variable "vpc_id" {}
 
 variable "db_sg_name" {}
 
-variable "security_group_id" {}
