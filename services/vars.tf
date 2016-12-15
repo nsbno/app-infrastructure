@@ -17,7 +17,6 @@ variable "private_subnet_ids" { type = "list" }
 
 # Security groups
 variable "app_security_group_id" {}
-variable "allow_outgoing_traffic_security_group_id" {}
 variable "allow_bastion_access_security_group_id" {}
 variable "icmp_security_group_id" {}
 

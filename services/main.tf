@@ -13,7 +13,6 @@ resource "aws_instance" "app" {
     vpc_security_group_ids = [
         "${var.app_security_group_id}",
         "${var.allow_bastion_access_security_group_id}",
-        "${var.allow_outgoing_traffic_security_group_id}",
         "${var.icmp_security_group_id}"
     ]
 
