@@ -12,8 +12,7 @@ resource "aws_instance" "app" {
     source_dest_check           = false
     vpc_security_group_ids = [
         "${var.app_security_group_id}",
-        "${var.bastion_security_group_id}",
-        "${var.icmp_security_group_id}"
+        "${var.bastion_security_group_id}"
     ]
 
     tags { Name = "${var.appserver_name} ${count.index}" }

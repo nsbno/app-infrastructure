@@ -1,0 +1,17 @@
+#!/bin/bash
+
+vpcid=$(aws ec2 describe-vpcs --filters "Name=tag-value, Values=${1}_vpc" | jq '.Vpcs[0].VpcId')
+private_subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=*private_subnet*" | jq '.Subnets[].SubnetId' | tr '\n' ',' | sed s/,$//)
+public_subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=*public_subnet*" | jq '.Subnets[].SubnetId' | tr '\n' ',' | sed s/,$//)
+bastion_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=*bastion_ssh_sg*" | jq '.SecurityGroups[0].GroupId')
+
+echo "
+variable \"vpc_id\" { default=$vpcid }
+variable \"private_subnet_ids\" {
+  default = [$private_subnets]
+}
+variable \"public_subnet_ids\" {
+  default = [$public_subnets]
+}
+variable \"bastion_security_group_id\" { default = $bastion_security_group_id }
+"
