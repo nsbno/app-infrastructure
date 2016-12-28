@@ -5,7 +5,7 @@
 resource "aws_elb" "app" {
   name = "${var.elb_name}"
 
-  subnets                     = ["${element(var.public_subnet_ids, 0)}"]
+  subnets                     = ["${var.public_subnet_ids}"]
   security_groups             = ["${aws_security_group.load_balancer.id}"]
   instances                   = ["${var.app_ids}"]
   cross_zone_load_balancing   = true
