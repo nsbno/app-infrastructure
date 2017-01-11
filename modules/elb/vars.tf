@@ -12,3 +12,5 @@ variable "app_ids" { type = "list" }
 
 # Security groups
 variable "elb_sg" {}
+
+variable "healthcheck_target" {}

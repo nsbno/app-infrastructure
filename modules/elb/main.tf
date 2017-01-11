@@ -1,7 +1,3 @@
-/*
-  ELB
-*/
-
 resource "aws_elb" "app" {
   name = "${var.elb_name}"
 
@@ -24,7 +20,7 @@ resource "aws_elb" "app" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 3
-    target              = "HTTP:80/nsbmob/health"
+    target              = "${var.healthcheck_target}"
     interval            = 30
   }
 
