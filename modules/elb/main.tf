@@ -10,13 +10,6 @@ resource "aws_elb" "app" {
   connection_draining_timeout = 400
 
   listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
-  }
-
-  listener {
     instance_port      = 80
     instance_protocol  = "http"
     lb_port            = 443
