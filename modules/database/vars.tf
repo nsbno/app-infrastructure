@@ -14,3 +14,4 @@ variable "multi_az" {}
 variable "backup_window" {}
 variable "allocated_storage" {}
 variable "storage_type" {}
+variable "apply_immediately" {}

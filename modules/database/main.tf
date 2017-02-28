@@ -14,7 +14,7 @@ resource "aws_db_instance" "db" {
   backup_window           = "${var.backup_window}"
   allocated_storage       = "${var.allocated_storage}"
   storage_type            = "${var.storage_type}"
-  apply_immediately       = "true"
+  apply_immediately       = "${var.apply_immediately}"
 }
 
 resource "aws_security_group" "db_sg" {
