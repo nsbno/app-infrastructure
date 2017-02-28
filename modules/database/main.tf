@@ -13,6 +13,7 @@ resource "aws_db_instance" "db" {
   multi_az                = "${var.multi_az}"
   backup_window           = "${var.backup_window}"
   allocated_storage       = "${var.allocated_storage}"
+  storage_type            = "${var.storage_type}"
   apply_immediately       = "true"
 }
 
