@@ -12,9 +12,11 @@ resource "aws_db_instance" "db" {
   backup_retention_period = "${var.backup_retention_period}"
   multi_az                = "${var.multi_az}"
   backup_window           = "${var.backup_window}"
+  maintenance_window      = "${var.maintenance_window}"
   allocated_storage       = "${var.allocated_storage}"
   storage_type            = "${var.storage_type}"
   apply_immediately       = "${var.apply_immediately}"
+  skip_final_snapshot     = "${var.skip_final_snapshot}"
 }
 
 resource "aws_security_group" "db_sg" {

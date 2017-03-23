@@ -12,6 +12,8 @@ variable "db_sg_name" {}
 variable "backup_retention_period" {}
 variable "multi_az" {}
 variable "backup_window" {}
+variable "maintenance_window" { default =  "Wed:03:55-Wed:04:25" }
 variable "allocated_storage" {}
 variable "storage_type" {}
 variable "apply_immediately" {}
+variable "skip_final_snapshot" { default = "false" }
