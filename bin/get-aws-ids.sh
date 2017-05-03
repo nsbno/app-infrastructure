@@ -7,7 +7,7 @@ bastion_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc
 mgmtserver_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${1}_mgmtserver_sg*" | jq '.SecurityGroups[0].GroupId')
 nat_ip=$(aws ec2 describe-nat-gateways --filter "Name=vpc-id, Values=${vpcid}" | jq ".NatGateways[0].NatGatewayAddresses[0].PublicIp")
 route53_hosted_zone_id=$(aws route53 list-hosted-zones-by-name --dns-name ${2} | jq '.HostedZones[0].Id' | sed 's/\/hostedzone\///g')
-app_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=nsbno-${1}" | jq '.SecurityGroups[0].GroupId')
+app_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${1}_nsbno_app_sg" | jq '.SecurityGroups[0].GroupId')
 
 echo "
 variable \"vpc_id\" { default=\"$vpcid\" }
