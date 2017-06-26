@@ -1,12 +1,15 @@
 #!/bin/bash
 
-vpcid=$(aws ec2 describe-vpcs --filters "Name=tag-value, Values=${1}_vpc" | jq '.Vpcs[0].VpcId' | sed s/\"//g)
-private_subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${1}_private_subnet*" | jq '.Subnets[].SubnetId' | tr '\n' ',' | sed s/,$//)
-public_subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${1}_public_subnet*" | jq '.Subnets[].SubnetId' | tr '\n' ',' | sed s/,$//)
-bastion_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${1}_bastion_ssh_sg*" | jq '.SecurityGroups[0].GroupId')
-mgmtserver_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${1}_mgmtserver_sg*" | jq '.SecurityGroups[0].GroupId')
+VPC_NAME="${1}"
+DNS_NAME="${2}"
+
+vpcid=$(aws ec2 describe-vpcs --filters "Name=tag-value, Values=${VPC_NAME}_vpc" | jq '.Vpcs[0].VpcId' | sed s/\"//g)
+private_subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${VPC_NAME}_private_subnet*" | jq '.Subnets[].SubnetId' | tr '\n' ',' | sed s/,$//)
+public_subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${VPC_NAME}_public_subnet*" | jq '.Subnets[].SubnetId' | tr '\n' ',' | sed s/,$//)
+bastion_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${VPC_NAME}_bastion_ssh_sg*" | jq '.SecurityGroups[0].GroupId')
+mgmtserver_security_group_id=$(aws ec2 describe-security-groups --filters "Name=vpc-id, Values=${vpcid}, Name=tag-value, Values=${VPC_NAME}_mgmtserver_sg*" | jq '.SecurityGroups[0].GroupId')
 nat_ip=$(aws ec2 describe-nat-gateways --filter "Name=vpc-id, Values=${vpcid}" | jq ".NatGateways[0].NatGatewayAddresses[0].PublicIp")
-route53_hosted_zone_id=$(aws route53 list-hosted-zones-by-name --dns-name ${2} | jq '.HostedZones[0].Id' | sed 's/\/hostedzone\///g')
+route53_hosted_zone_id=$(aws route53 list-hosted-zones-by-name --dns-name ${DNS_NAME} | jq '.HostedZones[0].Id' | sed 's/\/hostedzone\///g')
 
 echo "
 variable \"vpc_id\" { default=\"$vpcid\" }
