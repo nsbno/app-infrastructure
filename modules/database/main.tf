@@ -10,6 +10,7 @@ resource "aws_db_instance" "db" {
   db_subnet_group_name    = "${var.db_subnet_group_id}"
   parameter_group_name    = "${var.db_parameter_group_name}"
   backup_retention_period = "${var.backup_retention_period}"
+  availability_zone       = "${var.availability_zone}"
   multi_az                = "${var.multi_az}"
   backup_window           = "${var.backup_window}"
   maintenance_window      = "${var.maintenance_window}"
