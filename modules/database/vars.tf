@@ -7,7 +7,7 @@ variable "db_instance_class" {}
 variable "db_username" {}
 variable "db_password" {}
 variable "db_parameter_group_name" {}
-variable "vpc_id" {}
+variable "vpc_name" {}
 variable "db_sg_name" {}
 variable "backup_retention_period" {}
 variable "availability_zone" { default = "eu-central-1a" }

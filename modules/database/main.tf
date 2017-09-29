@@ -1,3 +1,6 @@
+data "aws_vpc" "vpc" {
+  tags { Name = "${var.vpc_name}_vpc" }
+}
 resource "aws_db_instance" "db" {
   name                    = "${var.db_name}"
   identifier              = "${var.db_identifier}"
@@ -21,7 +24,7 @@ resource "aws_db_instance" "db" {
 }
 
 resource "aws_security_group" "db_sg" {
-    vpc_id      = "${var.vpc_id}"
+    vpc_id      = "${data.aws_vpc.vpc.id}"
     name        = "${var.db_sg_name}"
     description = "${var.db_sg_name}"
     tags { Name = "${var.db_sg_name}" }
