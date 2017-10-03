@@ -21,6 +21,7 @@ resource "aws_db_instance" "db" {
   storage_type            = "${var.storage_type}"
   apply_immediately       = "${var.apply_immediately}"
   skip_final_snapshot     = "${var.skip_final_snapshot}"
+  license_model           = "${var.license_model}"
 }
 
 resource "aws_security_group" "db_sg" {
