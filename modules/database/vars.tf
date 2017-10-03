@@ -18,3 +18,4 @@ variable "allocated_storage" {}
 variable "storage_type" {}
 variable "apply_immediately" {}
 variable "skip_final_snapshot" { default = "false" }
+variable "license_model" { default = "" }
