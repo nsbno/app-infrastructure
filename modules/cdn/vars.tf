@@ -1,4 +1,3 @@
-variable "env" {}
 variable "appname" {}
 variable "domain" {}
 variable "bucket_alias" {}
