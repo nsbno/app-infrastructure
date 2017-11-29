@@ -1,5 +1,6 @@
 variable "env" {}
 variable "appname" {}
 variable "domain" {}
-variable "bucket_name" {}
+variable "bucket_alias" {}
 variable "origin_id" {}
+variable "s3_domain_name" {}

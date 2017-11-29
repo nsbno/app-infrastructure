@@ -9,16 +9,16 @@ data "aws_acm_certificate" "certificate" {
 
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   origin {
-    domain_name = "${var.origin_id}"
-    origin_id   = "S3-${var.env}.${var.appname}.${var.domain}"
+    domain_name = "${var.s3_domain_name}"
+    origin_id   = "${var.origin_id}"
   }
   enabled      = true
-  aliases      = [ "${var.env}.${var.appname}.${var.domain}" ]
+  aliases      = [ "${var.bucket_alias}" ]
   price_class  = "PriceClass_100"
   default_cache_behavior {
     allowed_methods  = [ "GET", "HEAD" ]
     cached_methods   = [ "GET", "HEAD" ]
-    target_origin_id = "S3-${var.env}.${var.appname}.${var.domain}"
+    target_origin_id = "${var.origin_id}"
     forwarded_values {
       query_string = true
       cookies {
