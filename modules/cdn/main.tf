@@ -13,7 +13,7 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     origin_id   = "${var.origin_id}"
   }
   enabled             = true
-  aliases             = [ "${var.bucket_alias}" ]
+  aliases             = [ "${var.aliases}" ]
   price_class         = "PriceClass_100"
   default_root_object = "${var.default_root_object}"
   default_cache_behavior {
