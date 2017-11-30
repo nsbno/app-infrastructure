@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 data "aws_acm_certificate" "certificate" {
-  domain   = "${var.appname}.${var.domain}"
+  domain   = "${var.domain}"
   statuses = ["ISSUED"]
 }
 
@@ -12,10 +12,10 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
     domain_name = "${var.s3_domain_name}"
     origin_id   = "${var.origin_id}"
   }
-  enabled      = true
-  aliases      = [ "${var.bucket_alias}" ]
-  price_class  = "PriceClass_100"
-  default_root_object = "index.html"
+  enabled             = true
+  aliases             = [ "${var.bucket_alias}" ]
+  price_class         = "PriceClass_100"
+  default_root_object = "${var.default_root_object}"
   default_cache_behavior {
     allowed_methods  = [ "GET", "HEAD" ]
     cached_methods   = [ "GET", "HEAD" ]
