@@ -9,7 +9,7 @@ data "aws_acm_certificate" "certificate" {
 
 resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   origin {
-    domain_name = "${var.s3_domain_name}"
+    domain_name = "${var.origin_domain_name}"
     origin_id   = "${var.origin_id}"
   }
   enabled             = true
