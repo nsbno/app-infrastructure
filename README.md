@@ -12,7 +12,7 @@ It is assumed that this repository is checked out "next to" the repos using it (
 Run the following command to request a certificate from AWS Certificate Manager (ACM). Replace `APPLICATION` by whatever you want to secure. You'll need the `aws` command installed.
 
 ```
-aws acm request-certificate --domain-name APPLICATION.cloud.nsb.no --subject-alternative-names "*.APPLICATION.cloud.nsb.no" --domain-validation-options DomainName=APPLICATION.cloud.nsb.no,ValidationDomain=nsb.no DomainName="*.APPLICATION.cloud.nsb.no",ValidationDomain=nsb.no
+aws acm request-certificate --domain-name APPLICATION.<domain> --subject-alternative-names "*.APPLICATION.<domain>" --domain-validation-options DomainName=APPLICATION.<domain>,ValidationDomain=<top-domain> DomainName="*.APPLICATION.<domain>",ValidationDomain=<top-domain>
 ```
 
 This will trigger an email to be sent to the owners of `nsb.no` (at, among others `hostmaster@nsb.no`) who will need to approve the request.
