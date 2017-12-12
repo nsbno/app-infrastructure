@@ -15,4 +15,4 @@ Run the following command to request a certificate from AWS Certificate Manager 
 aws acm request-certificate --domain-name APPLICATION.<domain> --subject-alternative-names "*.APPLICATION.<domain>" --domain-validation-options DomainName=APPLICATION.<domain>,ValidationDomain=<top-domain> DomainName="*.APPLICATION.<domain>",ValidationDomain=<top-domain>
 ```
 
-This will trigger an email to be sent to the owners of `nsb.no` (at, among others `hostmaster@nsb.no`) who will need to approve the request.
+This will trigger an email to be sent to the owners of the top domain (e.g. nsb.no) who will need to approve the request.
