@@ -22,8 +22,13 @@ resource "aws_iam_role" "instance_profile_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "instance_profile_default_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "instance_profile_eb_web_tier_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
+  role = "${aws_iam_role.instance_profile_role.name}"
+}
+
+resource "aws_iam_role_policy_attachment" "instance_profile_cw_logs_full_access_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
   role = "${aws_iam_role.instance_profile_role.name}"
 }
 
