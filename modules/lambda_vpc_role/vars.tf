@@ -1,4 +1,5 @@
 variable "role_name" {}
+variable "description" { default = "" }
 variable "policy_templates" {
   type = "list"
 }
