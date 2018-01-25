@@ -11,6 +11,9 @@ resource "aws_cloudfront_distribution" "cloudfront_distribution" {
   origin {
     domain_name = "${var.origin_domain_name}"
     origin_id   = "${var.origin_id}"
+    s3_origin_config {
+      origin_access_identity = "${var.origin_access_identity}"
+    }
   }
   enabled             = true
   aliases             = [ "${var.aliases}" ]
