@@ -23,6 +23,9 @@ resource "aws_db_instance" "db" {
   skip_final_snapshot       = "${var.skip_final_snapshot}"
   final_snapshot_identifier = "${var.db_identifier}-final-snapshot"
   license_model             = "${var.license_model}"
+  tags {
+    Name = "${var.db_name_tag}"
+  }
 }
 
 resource "aws_security_group" "db_sg" {

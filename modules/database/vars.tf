@@ -1,4 +1,5 @@
 variable "db_name" {}
+variable "db_name_tag" { default = "" }
 variable "db_subnet_group_id" {}
 variable "db_identifier" {}
 variable "db_engine" {}
