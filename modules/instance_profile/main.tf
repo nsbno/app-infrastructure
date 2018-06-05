@@ -44,11 +44,6 @@ resource "aws_iam_role_policy_attachment" "webtier_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
-resource "aws_iam_role_policy_attachment" "cloudwatch_policy_attachment" {
-  role       = "${aws_iam_instance_profile.instance_profile.name}"
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-}
-
 resource "aws_iam_role_policy_attachment" "cloudwatch_metric_policy_attachment" {
   role       = "${aws_iam_instance_profile.instance_profile.name}"
   policy_arn = "${aws_iam_policy.cloudwatch_metric_policy.arn}"
