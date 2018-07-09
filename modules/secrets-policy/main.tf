@@ -26,6 +26,6 @@ module "get-secret-policy" {
 
 module "get-secret-policy-attachment" {
     source = "git@github.com:nsbno/app-infrastructure.git//modules/policy_attachment?ref=8347a3b"
-    role = "${var.instance_profile}"
+    role = "${var.role_name}"
     policy_arn = "${module.get-secret-policy.arn}"
 }

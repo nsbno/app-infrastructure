@@ -2,4 +2,4 @@ variable "appname" {}
 variable "env" {}
 variable "secret_ids" { type="list" }
 variable "aws_region" {}
-variable "instance_profile" {}
+variable "role_name" {}
