@@ -28,6 +28,10 @@ resource "aws_dynamodb_table" "dynamodb-table" {
   point_in_time_recovery {
     enabled = "${var.env == "prod" ? true : false}"
   }
+
+  server_side_encryption {
+    enabled = "${var.encryption_enabled}"
+  }
 }
 
 resource "aws_appautoscaling_target" "dynamodb_table_read_target" {
