@@ -9,3 +9,4 @@ variable "policy_names" {
 variable "policy_descriptions" {
   type = "list"
 }
+variable "type" {default = "basic", description = "valid types are basic, vpc or cdn"}
