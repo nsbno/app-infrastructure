@@ -29,17 +29,15 @@ resource "aws_iam_role" "role" {
   assume_role_policy = "${data.aws_iam_policy_document.lambda-assume-role-policy.json}"
 }
 
-
-
 resource "aws_iam_policy" "policy" {
-  count       = "${length(var.policy_templates)}"
+  count       = "${var.policy_count}"
   name        = "${element(var.policy_names, count.index)}"
   description = "${element(var.policy_descriptions, count.index)}"
   policy      = "${element(var.policy_templates, count.index)}"
 }
 
 resource "aws_iam_role_policy_attachment" "policy-attach" {
-  count      = "${length(var.policy_templates)}"
+  count      = "${var.policy_count}"
   role       = "${aws_iam_role.role.name}"
   policy_arn = "${element(aws_iam_policy.policy.*.arn, count.index)}"
 }
