@@ -7,7 +7,7 @@ resource "aws_dynamodb_table" "dynamodb-table" {
   stream_view_type = "${var.stream_view_type}"
 
   ttl {
-    enabled = "${var.ttl_enabled}"
+    enabled        = "${var.ttl_enabled}"
     attribute_name = "${var.ttl_attribute_name}"
   }
 
@@ -22,7 +22,11 @@ resource "aws_dynamodb_table" "dynamodb-table" {
   }
 
   lifecycle {
-    ignore_changes = ["read_capacity", "write_capacity"]
+    ignore_changes = [
+      "read_capacity",
+      "write_capacity",
+      "tags",
+    ]
   }
 
   point_in_time_recovery {
@@ -38,7 +42,7 @@ resource "aws_appautoscaling_target" "dynamodb_table_read_target" {
   max_capacity       = "${var.read_capacity_max}"
   min_capacity       = 1
   resource_id        = "table/${aws_dynamodb_table.dynamodb-table.id}"
-  role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
+  role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
   scalable_dimension = "dynamodb:table:ReadCapacityUnits"
   service_namespace  = "dynamodb"
 }
@@ -47,7 +51,7 @@ resource "aws_appautoscaling_target" "dynamodb_table_write_target" {
   max_capacity       = "${var.write_capacity_max}"
   min_capacity       = 1
   resource_id        = "table/${aws_dynamodb_table.dynamodb-table.id}"
-  role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
+  role_arn           = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/dynamodb.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
   scalable_dimension = "dynamodb:table:WriteCapacityUnits"
   service_namespace  = "dynamodb"
 }
