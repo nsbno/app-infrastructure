@@ -14,7 +14,7 @@ variable "backup_retention_period" {}
 variable "availability_zone" { default = "eu-central-1a" }
 variable "multi_az" {}
 variable "backup_window" {}
-variable "maintenance_window" { default =  "Wed:03:55-Wed:04:25" }
+variable "maintenance_window" { default =  "Wed:00:45-Wed:01:15" } # Timezone is UTC
 variable "allocated_storage" {}
 variable "storage_type" {}
 variable "apply_immediately" {}
