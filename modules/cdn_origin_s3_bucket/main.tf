@@ -6,6 +6,10 @@ resource "aws_s3_bucket" "cdn_origin_s3_bucket" {
     allowed_methods = ["${var.allowed_methods}"]
     allowed_origins = ["${var.allowed_origins}"]
   }
+
+  lifecycle {
+    ignore_changes = ["tags"]
+  }
 }
 
 data "aws_nat_gateway" "test_gateway" {

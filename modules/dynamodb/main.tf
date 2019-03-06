@@ -25,6 +25,7 @@ resource "aws_dynamodb_table" "dynamodb-table" {
     ignore_changes = [
       "read_capacity",
       "write_capacity",
+      "ttl",
       "tags",
     ]
   }
