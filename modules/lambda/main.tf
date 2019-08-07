@@ -1,17 +1,19 @@
 data "aws_vpc" "vpc" {
-  tags { Name = "${var.vpc_name}_vpc" }
+  tags = {
+    Name = "${var.vpc_name}_vpc"
+  }
 }
 
 data "aws_subnet" "private_1a" {
   vpc_id = "${data.aws_vpc.vpc.id}"
-  tags {
+  tags = {
     Name = "${var.vpc_name}_private_subnet_eu-central-1a"
   }
 }
 
 data "aws_subnet" "private_1b" {
   vpc_id = "${data.aws_vpc.vpc.id}"
-  tags {
+  tags = {
     Name = "${var.vpc_name}_private_subnet_eu-central-1b"
   }
 }
@@ -27,14 +29,14 @@ resource "aws_lambda_function" "lambda" {
   role             = "${data.aws_iam_role.iam_for_lambda.arn}"
   handler          = "${var.handler}"
   runtime          = "${var.runtime}"
-  source_code_hash = "${base64sha256(file("${var.filename}"))}"
+  source_code_hash = "${filebase64sha256("${var.filename}")}"
   publish          = "${var.publish}"
-  environment = {
+  environment {
     variables = "${var.environment}"
   }
   vpc_config {
     subnet_ids         = [ "${data.aws_subnet.private_1a.id}", "${data.aws_subnet.private_1b.id}" ]
-    security_group_ids = [ "${var.security_group_ids}" ]
+    security_group_ids = "${var.security_group_ids}"
   }
 
 }
