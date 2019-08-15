@@ -4,8 +4,9 @@ resource "aws_iam_instance_profile" "instance_profile" {
 }
 
 resource "aws_iam_role" "instance_profile_role" {
-  name = "${var.instance_profile_name}"
+  name        = "${var.instance_profile_name}"
   description = "${var.role_description}"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -25,6 +26,7 @@ EOF
 resource "aws_iam_policy" "cloudwatch_metric_policy" {
   name        = "${var.instance_profile_name}-cloudwatch-metric-policy"
   description = "Provides write access to Cloudwatch metrics"
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
