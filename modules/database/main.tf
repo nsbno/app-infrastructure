@@ -1,6 +1,9 @@
 data "aws_vpc" "vpc" {
-  tags { Name = "${var.vpc_name}_vpc" }
+  tags {
+    Name = "${var.vpc_name}_vpc"
+  }
 }
+
 resource "aws_db_instance" "db" {
   name                      = "${var.db_name}"
   identifier                = "${var.db_identifier}"
@@ -23,15 +26,31 @@ resource "aws_db_instance" "db" {
   skip_final_snapshot       = "${var.skip_final_snapshot}"
   final_snapshot_identifier = "${var.db_identifier}-final-snapshot"
   license_model             = "${var.license_model}"
+
   tags {
     Name = "${var.db_name_tag}"
   }
 }
 
 resource "aws_security_group" "db_sg" {
-    vpc_id      = "${data.aws_vpc.vpc.id}"
-    name        = "${var.db_sg_name}"
-    description = "${var.db_sg_name}"
-    tags { Name = "${var.db_sg_name}" }
+  vpc_id      = "${data.aws_vpc.vpc.id}"
+  name        = "${var.db_sg_name}"
+  description = "${var.db_sg_name}"
+
+  tags {
+    Name = "${var.db_sg_name}"
+  }
 }
 
+data "aws_route53_zone" "route53_zone" {
+  name         = "internal.vy.no"
+  private_zone = true
+}
+
+resource "aws_route53_record" "db_internal_route53_record" {
+  zone_id = "${data.aws_route53_zone.route53_zone.zone_id}"
+  name    = "${var.db_name_tag}.db.internal.vy.no"
+  type    = "CNAME"
+  ttl     = 5
+  records = ["${aws_db_instance.db.address}"]
+}
