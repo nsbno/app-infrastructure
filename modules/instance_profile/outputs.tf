@@ -7,5 +7,5 @@ output "arn" {
 }
 
 output "role_arn" {
-  value = "${aws_iam_instance_profile.instance_profile.role.arn}"
+  value = "${aws_iam_role.instance_profile_role.arn}"
 }
