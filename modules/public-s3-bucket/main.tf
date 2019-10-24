@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "public_bucket" {
-  bucket = "${var.bucket_name}"
-  acl = "public-read"
+  bucket = var.bucket_name
+  acl    = "public-read"
   policy = <<POLICY
 {
   "Version":"2012-10-17",
@@ -15,5 +15,6 @@ resource "aws_s3_bucket" "public_bucket" {
   ]
 }
 POLICY
+
 }
 
