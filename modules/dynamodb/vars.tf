@@ -1,6 +1,11 @@
-variable "env" {}
-variable "name" {}
-variable "hash_key" {}
+variable "env" {
+}
+
+variable "name" {
+}
+
+variable "hash_key" {
+}
 
 variable "stream_enabled" {
   default = false
@@ -29,3 +34,4 @@ variable "write_capacity_max" {
 variable "encryption_enabled" {
   default = false
 }
+

@@ -1,2 +1,6 @@
-variable "role" {}
-variable "policy_arn" {}
+variable "role" {
+}
+
+variable "policy_arn" {
+}
+

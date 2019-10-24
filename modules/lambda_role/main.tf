@@ -17,32 +17,32 @@ data "aws_iam_policy_document" "lambda-assume-role-policy" {
 
     principals {
       type        = "Service"
-      identifiers = "${local.service_identifiers[var.type]}"
+      identifiers = local.service_identifiers[var.type]
     }
   }
 }
 
-
 resource "aws_iam_role" "role" {
-  name               = "${var.role_name}"
-  description        = "${var.description}"
-  assume_role_policy = "${data.aws_iam_policy_document.lambda-assume-role-policy.json}"
+  name               = var.role_name
+  description        = var.description
+  assume_role_policy = data.aws_iam_policy_document.lambda-assume-role-policy.json
 }
 
 resource "aws_iam_policy" "policy" {
-  count       = "${var.policy_count}"
-  name        = "${element(var.policy_names, count.index)}"
-  description = "${element(var.policy_descriptions, count.index)}"
-  policy      = "${element(var.policy_templates, count.index)}"
+  count       = var.policy_count
+  name        = element(var.policy_names, count.index)
+  description = element(var.policy_descriptions, count.index)
+  policy      = element(var.policy_templates, count.index)
 }
 
 resource "aws_iam_role_policy_attachment" "policy-attach" {
-  count      = "${var.policy_count}"
-  role       = "${aws_iam_role.role.name}"
-  policy_arn = "${element(aws_iam_policy.policy.*.arn, count.index)}"
+  count      = var.policy_count
+  role       = aws_iam_role.role.name
+  policy_arn = element(aws_iam_policy.policy.*.arn, count.index)
 }
 
 resource "aws_iam_role_policy_attachment" "default-policy-attach" {
-  role       = "${aws_iam_role.role.name}"
-  policy_arn = "${lookup(local.default_policies, var.type)}"
+  role       = aws_iam_role.role.name
+  policy_arn = local.default_policies[var.type]
 }
+

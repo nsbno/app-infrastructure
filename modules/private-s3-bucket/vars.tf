@@ -1,2 +1,7 @@
-variable "bucket_name" {}
-variable "policy" { default = "" }
+variable "bucket_name" {
+}
+
+variable "policy" {
+  default = ""
+}
+
