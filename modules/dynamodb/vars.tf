@@ -35,3 +35,20 @@ variable "encryption_enabled" {
   default = false
 }
 
+variable "attributes" {
+  type = list(object({
+    hash_key = string,
+    type     = string
+  }))
+}
+
+variable "indices" {
+  type = list(object({
+    hash_key           = string,
+    name               = string,
+    projection_type    = string,
+    non_key_attributes = list(string)
+  }))
+
+  default = []
+}
