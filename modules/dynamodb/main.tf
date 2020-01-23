@@ -11,9 +11,12 @@ resource "aws_dynamodb_table" "dynamodb-table" {
     attribute_name = var.ttl_attribute_name
   }
 
-  attribute {
-    name = var.hash_key
-    type = "S"
+  dynamic "attribute" {
+    for_each = var.attributes
+    content {
+      name = attribute.value.hash_key
+      type = attribute.value.type
+    }
   }
 
   tags = {
@@ -36,6 +39,18 @@ resource "aws_dynamodb_table" "dynamodb-table" {
 
   server_side_encryption {
     enabled = var.encryption_enabled
+  }
+
+  dynamic "global_secondary_index" {
+    for_each = var.indices
+    content {
+      hash_key           = global_secondary_index.value.hash_key
+      name               = global_secondary_index.value.name
+      read_capacity      = 1
+      write_capacity     = 1
+      projection_type    = global_secondary_index.value.projection_type
+      non_key_attributes = global_secondary_index.value.non_key_attributes
+    }
   }
 }
 
