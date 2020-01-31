@@ -7,6 +7,10 @@ variable "name" {
 variable "hash_key" {
 }
 
+variable "billing_mode" {
+  default = "PROVISIONED"
+}
+
 variable "stream_enabled" {
   default = false
 }
