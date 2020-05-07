@@ -26,8 +26,8 @@ resource "aws_secretsmanager_secret_version" "client_credentials_value" {
   secret_id = aws_secretsmanager_secret.client_credentials.id
 
   secret_string = jsonencode({
-    "oauth2.client_id"        = aws_cognito_user_pool_client.client.id,
-    "oauth2.client_secret"    = aws_cognito_user_pool_client.client.client_secret,
+    "oauth2.clientId"        = aws_cognito_user_pool_client.client.id,
+    "oauth2.clientSecret"    = aws_cognito_user_pool_client.client.client_secret,
     "oauth2.tokenEndpointUrl" = "https://${data.aws_cognito_user_pools.user_pool.name}.auth.eu-central-1.amazoncognito.com/oauth2/token"
   })
 }
