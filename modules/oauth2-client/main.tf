@@ -43,7 +43,7 @@ data "aws_iam_policy_document" "secret_policy_document" {
       "secretsmanager:DescribeSecret"
     ]
 
-    resources = [aws_secretsmanager_secret.client_credentials.arn]
+    resources = ["${substr(aws_secretsmanager_secret.client_credentials.arn, 0, length(aws_secretsmanager_secret.client_credentials.arn) - 7)}-??????"]
   }
 
   statement {
