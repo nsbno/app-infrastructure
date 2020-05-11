@@ -36,14 +36,33 @@ resource "aws_secretsmanager_secret_version" "client_credentials_value" {
   })
 }
 
-module "secrets-policy" {
-  source      = "git@github.com:nsbno/app-infrastructure.git//modules/secrets-policy?ref=1e3e39f"
-  appname     = var.appname
-  env         = var.env
-  role_name   = var.instance_profile_name
-  policy_name = "oauth2-credentials-policy"
+data "aws_iam_policy_document" "secret_policy_document" {
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
 
-  secret_ids = [
-    "${var.env}/${var.appname}/oauth2/client_credentials",
-  ]
+    resources = [aws_secretsmanager_secret.client_credentials.arn]
+  }
+
+  statement {
+    actions = [
+      "secretsmanager:ListSecrets"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "policy" {
+  name        = "${var.env}-${var.appname}-oauth2-credentials-policy"
+  path        = "/"
+  description = "Allow ${var.env}-${var.appname} to get Oauth2 credentials from Secrets Manager"
+  policy      = data.aws_iam_policy_document.secret_policy_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "policy_attachment" {
+  role       = var.instance_profile_name
+  policy_arn = aws_iam_policy.policy.arn
 }
