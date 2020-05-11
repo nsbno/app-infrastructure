@@ -4,10 +4,11 @@ variable "env" {}
 
 variable "appname" {}
 
-variable "instance_profile_name" {}
-
+variable "instance_profile_name" {
+  default = ""
+}
 
 variable "oauth_scopes" {
-  type = list(string)
+  type    = list(string)
   default = []
 }

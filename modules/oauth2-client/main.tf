@@ -56,6 +56,7 @@ data "aws_iam_policy_document" "secret_policy_document" {
 }
 
 resource "aws_iam_policy" "policy" {
+  count       = local.should_add_policy_to_role
   name        = "${var.env}-${var.appname}-oauth2-credentials-policy"
   path        = "/"
   description = "Allow ${var.env}-${var.appname} to get Oauth2 credentials from Secrets Manager"
@@ -63,6 +64,11 @@ resource "aws_iam_policy" "policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "policy_attachment" {
+  count      = local.should_add_policy_to_role
   role       = var.instance_profile_name
-  policy_arn = aws_iam_policy.policy.arn
+  policy_arn = aws_iam_policy.policy[0].arn
+}
+
+locals {
+  should_add_policy_to_role = var.instance_profile_name != "" ? 1 : 0
 }
