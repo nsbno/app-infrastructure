@@ -37,7 +37,7 @@ resource "aws_secretsmanager_secret_version" "client_credentials_value" {
 }
 
 module "secrets-policy" {
-  source      = "git@github.com:nsbno/app-infrastructure.git//modules/secrets-policy?ref=e37a0bf"
+  source      = "git@github.com:nsbno/app-infrastructure.git//modules/secrets-policy?ref=1e3e39f"
   appname     = var.appname
   env         = var.env
   role_name   = var.instance_profile_name
