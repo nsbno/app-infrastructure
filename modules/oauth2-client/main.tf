@@ -35,3 +35,15 @@ resource "aws_secretsmanager_secret_version" "client_credentials_value" {
     "oauth2.tokenEndpointUrl" = "https://${data.aws_cognito_user_pools.user_pool.name}.auth.eu-central-1.amazoncognito.com/oauth2/token"
   })
 }
+
+module "secrets-policy" {
+  source      = "git@github.com:nsbno/app-infrastructure.git//modules/secrets-policy?ref=e37a0bf"
+  appname     = var.appname
+  env         = var.env
+  role_name   = var.instance_profile_name
+  policy_name = "oauth2-credentials-policy"
+
+  secret_ids = [
+    "${var.env}/${var.appname}/oauth2/client_credentials",
+  ]
+}
