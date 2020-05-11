@@ -35,3 +35,34 @@ resource "aws_secretsmanager_secret_version" "client_credentials_value" {
     "oauth2.tokenEndpointUrl" = "https://${data.aws_cognito_user_pools.user_pool.name}.auth.eu-central-1.amazoncognito.com/oauth2/token"
   })
 }
+
+data "aws_iam_policy_document" "secret_policy_document" {
+  statement {
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret"
+    ]
+
+    resources = [aws_secretsmanager_secret.client_credentials.arn]
+  }
+
+  statement {
+    actions = [
+      "secretsmanager:ListSecrets"
+    ]
+
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "policy" {
+  name        = "${var.env}-${var.appname}-oauth2-credentials-policy"
+  path        = "/"
+  description = "Allow ${var.env}-${var.appname} to get Oauth2 credentials from Secrets Manager"
+  policy      = data.aws_iam_policy_document.secret_policy_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "policy_attachment" {
+  role       = var.instance_profile_name
+  policy_arn = aws_iam_policy.policy.arn
+}

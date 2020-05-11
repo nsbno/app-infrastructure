@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "secret_policy_document" {
 module "get-secret-policy" {
   source             = "git@github.com:nsbno/app-infrastructure.git//modules/iam_policy?ref=c378895"
   policy             = data.aws_iam_policy_document.secret_policy_document.json
-  policy_name        = "${var.env}-${var.appname}-get-secret-policy"
+  policy_name        = "${var.env}-${var.appname}-${var.policy_name}"
   policy_description = "Allow getting secret from Secrets Manager"
 }
 
