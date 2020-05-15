@@ -21,9 +21,7 @@ variable "db_instance_class" {
 }
 
 variable "db_username" {
-}
-
-variable "db_password" {
+  default = ""
 }
 
 variable "db_parameter_group_name" {
