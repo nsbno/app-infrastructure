@@ -53,3 +53,11 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_metric_policy_attachment" 
   policy_arn = aws_iam_policy.cloudwatch_metric_policy.arn
 }
 
+data "aws_iam_policy" "ecr_read_only" {
+  arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_read_only" {
+  role       = aws_iam_instance_profile.instance_profile.name
+  policy_arn = data.aws_iam_policy.ecr_read_only.arn
+}
