@@ -20,12 +20,6 @@ variable "db_engine_version" {
 variable "db_instance_class" {
 }
 
-variable "db_username" {
-}
-
-variable "db_password" {
-}
-
 variable "db_parameter_group_name" {
 }
 

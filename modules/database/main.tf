@@ -4,14 +4,43 @@ data "aws_vpc" "vpc" {
   }
 }
 
+data "aws_kms_key" "vpc_key" {
+  key_id = "alias/${var.vpc_name}_vpc"
+}
+
+resource "random_string" "rds_username" {
+  length  = 10
+  special = false
+  number  = false
+}
+
+resource "random_string" "rds_password" {
+  length  = 30
+  special = false
+}
+
+resource "aws_ssm_parameter" "rds_username" {
+  name   = "/${var.db_identifier}/rds_username"
+  type   = "SecureString"
+  value  = random_string.rds_username.result
+  key_id = data.aws_kms_key.vpc_key.id
+}
+
+resource "aws_ssm_parameter" "rds_password" {
+  name   = "/${var.db_identifier}/rds_password"
+  type   = "SecureString"
+  value  = random_string.rds_password.result
+  key_id = data.aws_kms_key.vpc_key.id
+}
+
 resource "aws_db_instance" "db" {
   name                      = var.db_name
   identifier                = var.db_identifier
   engine                    = var.db_engine
   engine_version            = var.db_engine_version
   instance_class            = var.db_instance_class
-  username                  = var.db_username
-  password                  = var.db_password
+  username                  = aws_ssm_parameter.rds_username.value
+  password                  = aws_ssm_parameter.rds_password.value
   vpc_security_group_ids    = [aws_security_group.db_sg.id]
   db_subnet_group_name      = var.db_subnet_group_id
   parameter_group_name      = var.db_parameter_group_name
