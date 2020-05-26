@@ -7,6 +7,10 @@ variable "name" {
 variable "hash_key" {
 }
 
+variable "range_key" {
+  default = null
+}
+
 variable "billing_mode" {
   default = "PROVISIONED"
 }
@@ -41,8 +45,8 @@ variable "encryption_enabled" {
 
 variable "attributes" {
   type = list(object({
-    hash_key = string,
-    type     = string
+    name = string,
+    type = string
   }))
 }
 
