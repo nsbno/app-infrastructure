@@ -1,8 +1,13 @@
+locals {
+  is_autoscaling_enabled = var.billing_mode == "PROVISIONED" ? 1 : 0
+}
+
 resource "aws_dynamodb_table" "dynamodb-table" {
   name             = "${var.env}${var.name}"
   read_capacity    = 1
   write_capacity   = 1
   hash_key         = var.hash_key
+  range_key        = var.range_key
   billing_mode     = var.billing_mode
   stream_enabled   = var.stream_enabled
   stream_view_type = var.stream_view_type
@@ -15,7 +20,7 @@ resource "aws_dynamodb_table" "dynamodb-table" {
   dynamic "attribute" {
     for_each = var.attributes
     content {
-      name = attribute.value.hash_key
+      name = attribute.value.name
       type = attribute.value.type
     }
   }
@@ -56,6 +61,7 @@ resource "aws_dynamodb_table" "dynamodb-table" {
 }
 
 resource "aws_appautoscaling_target" "dynamodb_table_read_target" {
+  count              = local.is_autoscaling_enabled
   max_capacity       = var.read_capacity_max
   min_capacity       = 1
   resource_id        = "table/${aws_dynamodb_table.dynamodb-table.id}"
@@ -65,6 +71,7 @@ resource "aws_appautoscaling_target" "dynamodb_table_read_target" {
 }
 
 resource "aws_appautoscaling_target" "dynamodb_table_write_target" {
+  count              = local.is_autoscaling_enabled
   max_capacity       = var.write_capacity_max
   min_capacity       = 1
   resource_id        = "table/${aws_dynamodb_table.dynamodb-table.id}"
@@ -74,11 +81,12 @@ resource "aws_appautoscaling_target" "dynamodb_table_write_target" {
 }
 
 resource "aws_appautoscaling_policy" "dynamodb_table_read_policy" {
-  name               = "DynamoDBReadCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_read_target.resource_id}"
+  count              = local.is_autoscaling_enabled
+  name               = "DynamoDBReadCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_read_target[0].resource_id}"
   policy_type        = "TargetTrackingScaling"
-  resource_id        = aws_appautoscaling_target.dynamodb_table_read_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.dynamodb_table_read_target.scalable_dimension
-  service_namespace  = aws_appautoscaling_target.dynamodb_table_read_target.service_namespace
+  resource_id        = aws_appautoscaling_target.dynamodb_table_read_target[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.dynamodb_table_read_target[0].scalable_dimension
+  service_namespace  = aws_appautoscaling_target.dynamodb_table_read_target[0].service_namespace
 
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
@@ -90,11 +98,12 @@ resource "aws_appautoscaling_policy" "dynamodb_table_read_policy" {
 }
 
 resource "aws_appautoscaling_policy" "dynamodb_table_write_policy" {
-  name               = "DynamoDBWriteCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_write_target.resource_id}"
+  count              = local.is_autoscaling_enabled
+  name               = "DynamoDBWriteCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_write_target[0].resource_id}"
   policy_type        = "TargetTrackingScaling"
-  resource_id        = aws_appautoscaling_target.dynamodb_table_write_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.dynamodb_table_write_target.scalable_dimension
-  service_namespace  = aws_appautoscaling_target.dynamodb_table_write_target.service_namespace
+  resource_id        = aws_appautoscaling_target.dynamodb_table_write_target[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.dynamodb_table_write_target[0].scalable_dimension
+  service_namespace  = aws_appautoscaling_target.dynamodb_table_write_target[0].service_namespace
 
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
