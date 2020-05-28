@@ -1,3 +1,7 @@
+locals {
+  is_autoscaling_enabled = var.billing_mode == "PROVISIONED" ? 1 : 0
+}
+
 resource "aws_dynamodb_table" "dynamodb-table" {
   name             = "${var.env}${var.name}"
   read_capacity    = 1
@@ -57,7 +61,7 @@ resource "aws_dynamodb_table" "dynamodb-table" {
 }
 
 resource "aws_appautoscaling_target" "dynamodb_table_read_target" {
-  count              = var.billing_mode == "PROVISIONED" ? 1 : 0
+  count              = local.is_autoscaling_enabled
   max_capacity       = var.read_capacity_max
   min_capacity       = 1
   resource_id        = "table/${aws_dynamodb_table.dynamodb-table.id}"
@@ -67,7 +71,7 @@ resource "aws_appautoscaling_target" "dynamodb_table_read_target" {
 }
 
 resource "aws_appautoscaling_target" "dynamodb_table_write_target" {
-  count              = var.billing_mode == "PROVISIONED" ? 1 : 0
+  count              = local.is_autoscaling_enabled
   max_capacity       = var.write_capacity_max
   min_capacity       = 1
   resource_id        = "table/${aws_dynamodb_table.dynamodb-table.id}"
@@ -77,7 +81,7 @@ resource "aws_appautoscaling_target" "dynamodb_table_write_target" {
 }
 
 resource "aws_appautoscaling_policy" "dynamodb_table_read_policy" {
-  count              = var.billing_mode == "PROVISIONED" ? 1 : 0
+  count              = local.is_autoscaling_enabled
   name               = "DynamoDBReadCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_read_target[0].resource_id}"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.dynamodb_table_read_target[0].resource_id
@@ -94,7 +98,7 @@ resource "aws_appautoscaling_policy" "dynamodb_table_read_policy" {
 }
 
 resource "aws_appautoscaling_policy" "dynamodb_table_write_policy" {
-  count              = var.billing_mode == "PROVISIONED" ? 1 : 0
+  count              = local.is_autoscaling_enabled
   name               = "DynamoDBWriteCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_write_target[0].resource_id}"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.dynamodb_table_write_target[0].resource_id
