@@ -15,7 +15,7 @@ resource "aws_ecr_lifecycle_policy" "keep_last_N_policy" {
                 "tagStatus": "tagged",
                 "tagPrefixList": ["commit-"],
                 "countType": "imageCountMoreThan",
-                "countNumber": ${var.releases_to_keep}
+                "countNumber": ${var.images_to_keep}
             },
             "action": {
                 "type": "expire"
@@ -23,12 +23,12 @@ resource "aws_ecr_lifecycle_policy" "keep_last_N_policy" {
         },
         {
             "rulePriority": 2,
-            "description": "Keep last N snapshot images",
+            "description": "Keep builder image",
             "selection": {
                 "tagStatus": "tagged",
-                "tagPrefixList": ["snapshot-"],
+                "tagPrefixList": ["builder"],
                 "countType": "imageCountMoreThan",
-                "countNumber": ${var.snapshots_to_keep}
+                "countNumber": 1
             },
             "action": {
                 "type": "expire"
@@ -41,7 +41,7 @@ resource "aws_ecr_lifecycle_policy" "keep_last_N_policy" {
                 "tagStatus": "any",
                 "countType": "sinceImagePushed",
                 "countUnit": "days",
-                "countNumber": 1
+                "countNumber": 7
             },
             "action": {
                 "type": "expire"
