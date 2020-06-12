@@ -10,12 +10,12 @@ resource "aws_ecr_lifecycle_policy" "keep_last_N_policy" {
     "rules": [
         {
             "rulePriority": 1,
-            "description": "Keep last N images",
+            "description": "Keep last N release images",
             "selection": {
                 "tagStatus": "tagged",
-                "tagPrefixList": ["v"],
+                "tagPrefixList": ["commit-"],
                 "countType": "imageCountMoreThan",
-                "countNumber": ${var.images_to_keep}
+                "countNumber": ${var.releases_to_keep}
             },
             "action": {
                 "type": "expire"
@@ -23,9 +23,22 @@ resource "aws_ecr_lifecycle_policy" "keep_last_N_policy" {
         },
         {
             "rulePriority": 2,
-            "description": "Remove untagged images",
+            "description": "Keep last N snapshot images",
             "selection": {
-                "tagStatus": "untagged",
+                "tagStatus": "tagged",
+                "tagPrefixList": ["snapshot-"],
+                "countType": "imageCountMoreThan",
+                "countNumber": ${var.snapshots_to_keep}
+            },
+            "action": {
+                "type": "expire"
+            }
+        },
+        {
+            "rulePriority": 3,
+            "description": "Remove other images",
+            "selection": {
+                "tagStatus": "any",
                 "countType": "sinceImagePushed",
                 "countUnit": "days",
                 "countNumber": 1
