@@ -10,13 +10,14 @@ resource "aws_cognito_user_pool_client" "client" {
 
   supported_identity_providers         = ["COGNITO"]
   allowed_oauth_flows_user_pool_client = true
-  explicit_auth_flows                  = ["ALLOW_CUSTOM_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
+  explicit_auth_flows                  = []
 
   allowed_oauth_flows  = ["client_credentials"]
   allowed_oauth_scopes = var.oauth_scopes
 }
 
 resource "aws_secretsmanager_secret" "client_credentials" {
+  count       = local.should_add_secret_to_secrets_manager
   name        = "${var.env}/${var.appname}/oauth2/client_credentials"
   description = "Client credentials for ${var.appname} to access the microservices"
 
@@ -27,7 +28,8 @@ resource "aws_secretsmanager_secret" "client_credentials" {
 }
 
 resource "aws_secretsmanager_secret_version" "client_credentials_value" {
-  secret_id = aws_secretsmanager_secret.client_credentials.id
+  count     = local.should_add_secret_to_secrets_manager
+  secret_id = aws_secretsmanager_secret.client_credentials[0].id
 
   secret_string = jsonencode({
     "oauth2.clientId"         = aws_cognito_user_pool_client.client.id,
@@ -37,13 +39,14 @@ resource "aws_secretsmanager_secret_version" "client_credentials_value" {
 }
 
 data "aws_iam_policy_document" "secret_policy_document" {
+  count = local.should_add_secret_to_secrets_manager
   statement {
     actions = [
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret"
     ]
 
-    resources = ["${substr(aws_secretsmanager_secret.client_credentials.arn, 0, length(aws_secretsmanager_secret.client_credentials.arn) - 7)}-??????"]
+    resources = ["${substr(aws_secretsmanager_secret.client_credentials[0].arn, 0, length(aws_secretsmanager_secret.client_credentials[0].arn) - 7)}-??????"]
   }
 
   statement {
@@ -60,15 +63,16 @@ resource "aws_iam_policy" "policy" {
   name        = "${var.env}-${var.appname}-oauth2-credentials-policy"
   path        = "/"
   description = "Allow ${var.env}-${var.appname} to get Oauth2 credentials from Secrets Manager"
-  policy      = data.aws_iam_policy_document.secret_policy_document.json
+  policy      = data.aws_iam_policy_document.secret_policy_document[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "policy_attachment" {
   count      = local.should_add_policy_to_role
-  role       = var.instance_profile_name
+  role       = var.role_name
   policy_arn = aws_iam_policy.policy[0].arn
 }
 
 locals {
-  should_add_policy_to_role = var.instance_profile_name != "" ? 1 : 0
+  should_add_policy_to_role            = (var.role_name != "" ? 1 : 0) * (var.store_credentials ? 1 : 0)
+  should_add_secret_to_secrets_manager = var.store_credentials ? 1 : 0
 }
