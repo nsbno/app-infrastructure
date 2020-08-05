@@ -1,5 +1,5 @@
 data "pagerduty_escalation_policy" "default" {
-  name = "Default Escalation Policy"
+  name = "VY"
 }
 
 resource "pagerduty_service" "backend_service" {
@@ -9,8 +9,40 @@ resource "pagerduty_service" "backend_service" {
   escalation_policy = data.pagerduty_escalation_policy.default.id
   alert_creation    = "create_alerts_and_incidents"
 
-  alert_grouping         = "time"
-  alert_grouping_timeout = 2
+  acknowledgement_timeout = "null"
+  auto_resolve_timeout    = 86400
+
+  incident_urgency_rule {
+    type = "use_support_hours"
+
+    during_support_hours {
+      type    = "constant"
+      urgency = "high"
+    }
+
+    outside_support_hours {
+      type    = "constant"
+      urgency = "low"
+    }
+  }
+
+  scheduled_actions {
+    to_urgency = "high"
+    type       = "urgency_change"
+
+    at {
+      name = "support_hours_start"
+      type = "named_time"
+    }
+  }
+
+  support_hours {
+    type         = "fixed_time_per_day"
+    days_of_week = [1, 2, 3, 4, 5, 6, 7]
+    start_time   = "07:00:00"
+    end_time     = "23:00:00"
+    time_zone    = "Europe/Stockholm"
+  }
 }
 
 data "pagerduty_ruleset" "default_global" {
@@ -25,7 +57,7 @@ resource "pagerduty_ruleset_rule" "event_rule" {
     operator = "and"
 
     subconditions {
-      operator = "contains"
+      operator = "equals"
       parameter {
         value = var.service_name
         path  = "payload.component"
@@ -41,6 +73,10 @@ resource "pagerduty_ruleset_rule" "event_rule" {
     severity {
       value = "critical"
     }
+  }
+
+  lifecycle {
+    ignore_changes = [position]
   }
 }
 
