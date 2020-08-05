@@ -3,21 +3,22 @@ locals {
   duration_of_shift  = 16 * 60 * 60     # 16 hours
 }
 
-resource "pagerduty_team" "developers" {
-  name        = "Omnikanal utviklere"
-  description = "Alle utviklere som deltar i vaktordningen for Omnikanal"
+#resource "pagerduty_team" "developers" {
+#  name        = "Omnikanal utviklere"
+#  description = "Alle utviklere som deltar i vaktordningen for Omnikanal"
+#}
+
+data "pagerduty_user" "users" {
+  for_each = toset(var.users)
+  email    = each.value
 }
 
-resource "pagerduty_user" "omnikanal_user" {
-  name  = "Jarle Holtan"
-  email = "jarle.holtan@vy.no"
-}
-
-resource "pagerduty_team_membership" "team_membership" {
-  user_id = pagerduty_user.omnikanal_user.id
-  team_id = pagerduty_team.omnikanal_dev.id
-  role    = "manager"
-}
+#resource "pagerduty_team_membership" "team_membership" {
+#  for_each = data.pagerduty_user.users
+#  team_id  = pagerduty_team.developers.id
+#  user_id  = each.value.id
+#  role     = "manager"
+#}
 
 resource "pagerduty_schedule" "default_schedule" {
   name        = "Omnikanal Default Rotation"
@@ -26,11 +27,11 @@ resource "pagerduty_schedule" "default_schedule" {
 
   layer {
     name                         = "Configuration Layer"
-    start                        = ""
-    rotation_virtual_start       = ""
+    start                        = var.rotation_start_time
+    rotation_virtual_start       = var.rotation_start_time
     rotation_turn_length_seconds = local.duration_of_oncall
 
-    users = [pagerduty_user.omnikanal_user.id]
+    users = values(data.pagerduty_user.users)[*].id
 
     restriction {
       type              = "daily_restriction"
@@ -43,12 +44,12 @@ resource "pagerduty_schedule" "default_schedule" {
 resource "pagerduty_escalation_policy" "default" {
   name      = "Default Escalation Policy"
   num_loops = 2
-  teams     = [pagerduty_user.omnikanal_user.id]
+  #teams     = [pagerduty_team.developers.id]
 
   rule {
     escalation_delay_in_minutes = 30
     target {
-      type = "schedule"
+      type = "schedule_reference"
       id   = pagerduty_schedule.default_schedule.id
     }
   }

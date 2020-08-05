@@ -13,12 +13,34 @@ resource "pagerduty_service" "backend_service" {
   alert_grouping_timeout = 2
 }
 
-data "pagerduty_vendor" "cloudwatch" {
-  name = "Cloudwatch"
+data "pagerduty_ruleset" "default_global" {
+  name = "Default Global"
 }
 
-resource "pagerduty_service_integration" "cloudwatch_integration" {
-  name    = "Cloudwatch"
-  service = pagerduty_service.backend_service.id
-  vendor  = data.pagerduty_vendor.cloudwatch.id
+resource "pagerduty_ruleset_rule" "event_rule" {
+  ruleset  = data.pagerduty_ruleset.default_global.id
+  disabled = "false"
+
+  conditions {
+    operator = "and"
+
+    subconditions {
+      operator = "contains"
+      parameter {
+        value = var.service_name
+        path  = "payload.component"
+      }
+    }
+  }
+
+  actions {
+    route {
+      value = pagerduty_service.backend_service.id
+    }
+
+    severity {
+      value = "critical"
+    }
+  }
 }
+
