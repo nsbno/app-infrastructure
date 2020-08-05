@@ -3,7 +3,7 @@ data "pagerduty_escalation_policy" "default" {
 }
 
 resource "pagerduty_service" "backend_service" {
-  name        = var.service_name
+  name        = title(var.service_name)
   description = var.description
 
   escalation_policy = data.pagerduty_escalation_policy.default.id
