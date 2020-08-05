@@ -69,10 +69,6 @@ resource "pagerduty_ruleset_rule" "event_rule" {
     route {
       value = pagerduty_service.backend_service.id
     }
-
-    severity {
-      value = "critical"
-    }
   }
 
   lifecycle {
