@@ -9,6 +9,7 @@ data "aws_kms_key" "vpc_key" {
 }
 
 resource "random_string" "rds_username" {
+  count   = var.db_username != "" ? 0 : 1
   length  = 10
   special = false
   number  = false
@@ -22,7 +23,7 @@ resource "random_string" "rds_password" {
 resource "aws_ssm_parameter" "rds_username" {
   name   = "/${var.db_identifier}/rds_username"
   type   = "SecureString"
-  value  = random_string.rds_username.result
+  value  = var.db_username != "" ? var.db_username : random_string.rds_username[0].result
   key_id = data.aws_kms_key.vpc_key.id
 }
 
