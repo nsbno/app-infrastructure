@@ -23,6 +23,10 @@ variable "db_instance_class" {
 variable "db_parameter_group_name" {
 }
 
+variable "db_username" {
+  default = ""
+}
+
 variable "vpc_name" {
 }
 
