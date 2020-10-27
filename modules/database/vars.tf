@@ -5,6 +5,11 @@ variable "db_name_tag" {
   default = ""
 }
 
+variable "backup_to_other_account" {
+  type    = bool
+  default = false
+}
+
 variable "db_subnet_group_id" {
 }
 

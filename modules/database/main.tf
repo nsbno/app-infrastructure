@@ -58,7 +58,8 @@ resource "aws_db_instance" "db" {
   license_model             = var.license_model
 
   tags = {
-    Name = var.db_name_tag
+    Name           = var.db_name_tag
+    CopyDBSnapshot = var.backup_to_other_account ? "True" : "False"
   }
 }
 
