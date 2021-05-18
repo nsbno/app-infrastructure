@@ -3,7 +3,7 @@ locals {
 }
 
 resource "aws_dynamodb_table" "dynamodb-table" {
-  name             = "${var.env}${var.name}"
+  name             = "${var.env}-${var.name}"
   read_capacity    = 1
   write_capacity   = 1
   hash_key         = var.hash_key
