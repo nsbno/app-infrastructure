@@ -1,8 +1,5 @@
 variable "db_name" {
-}
-
-variable "db_name_tag" {
-  default = ""
+  type = string
 }
 
 variable "backup_to_other_account" {
@@ -10,45 +7,50 @@ variable "backup_to_other_account" {
   default = false
 }
 
-variable "db_subnet_group_id" {
+variable "db_subnet_group_name" {
+  type = string
 }
 
 variable "db_identifier" {
+  type = string
 }
 
 variable "db_engine" {
+  type = string
 }
 
 variable "db_engine_version" {
+  type = string
 }
 
 variable "db_instance_class" {
+  type = string
 }
 
 variable "db_parameter_group_name" {
+  type = string
 }
 
 variable "db_username" {
+  type    = string
   default = ""
 }
 
-variable "vpc_name" {
-}
-
-variable "db_sg_name" {
-}
-
 variable "backup_retention_period" {
+  type = string
 }
 
 variable "availability_zone" {
-  default = "eu-central-1a"
+  type    = string
+  default = ""
 }
 
 variable "multi_az" {
+  type = bool
 }
 
 variable "backup_window" {
+  type = string
 }
 
 variable "maintenance_window" { # Timezone is UTC
@@ -56,19 +58,40 @@ variable "maintenance_window" { # Timezone is UTC
 }
 
 variable "allocated_storage" {
+  type = number
 }
 
 variable "storage_type" {
+  type = string
 }
 
 variable "apply_immediately" {
 }
 
 variable "skip_final_snapshot" {
-  default = "false"
+  type    = bool
+  default = true
 }
 
 variable "license_model" {
+  type    = string
   default = ""
+}
+
+variable "kms_key_id" {
+  type = string
+}
+
+
+variable "vpc_security_group_ids" {
+  type = list(string)
+}
+
+variable "db_route53_hosted_zone_name" {
+  type = string
+}
+
+variable "db_route53_hosted_zone_id" {
+  type = string
 }
 
