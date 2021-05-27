@@ -1,10 +1,17 @@
-variable "vpc_name" {}
+variable "appname" {
+  type = string
+}
 
-variable "env" {}
+variable "name_prefix" {
+  type = string
+}
 
-variable "appname" {}
+variable "user_pool_id" {
+  type = string
+}
 
 variable "role_name" {
+  type    = string
   default = ""
 }
 
@@ -14,5 +21,11 @@ variable "oauth_scopes" {
 }
 
 variable "store_credentials" {
+  type    = bool
   default = true
+}
+
+variable "tags" {
+  type    = map(string)
+  default = {}
 }
