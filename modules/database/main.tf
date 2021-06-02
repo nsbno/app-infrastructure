@@ -1,13 +1,3 @@
-data "aws_vpc" "vpc" {
-  tags = {
-    Name = "${var.vpc_name}_vpc"
-  }
-}
-
-data "aws_kms_key" "vpc_key" {
-  key_id = "alias/${var.vpc_name}_vpc"
-}
-
 resource "random_string" "rds_username" {
   count   = var.db_username != "" ? 0 : 1
   length  = 10
@@ -24,14 +14,14 @@ resource "aws_ssm_parameter" "rds_username" {
   name   = "/${var.db_identifier}/rds_username"
   type   = "SecureString"
   value  = var.db_username != "" ? var.db_username : random_string.rds_username[0].result
-  key_id = data.aws_kms_key.vpc_key.id
+  key_id = var.kms_key_id
 }
 
 resource "aws_ssm_parameter" "rds_password" {
   name   = "/${var.db_identifier}/rds_password"
   type   = "SecureString"
   value  = random_string.rds_password.result
-  key_id = data.aws_kms_key.vpc_key.id
+  key_id = var.kms_key_id
 }
 
 resource "aws_db_instance" "db" {
@@ -42,8 +32,8 @@ resource "aws_db_instance" "db" {
   instance_class            = var.db_instance_class
   username                  = aws_ssm_parameter.rds_username.value
   password                  = aws_ssm_parameter.rds_password.value
-  vpc_security_group_ids    = [aws_security_group.db_sg.id]
-  db_subnet_group_name      = var.db_subnet_group_id
+  vpc_security_group_ids    = var.vpc_security_group_ids
+  db_subnet_group_name      = var.db_subnet_group_name
   parameter_group_name      = var.db_parameter_group_name
   backup_retention_period   = var.backup_retention_period
   availability_zone         = var.availability_zone
@@ -58,29 +48,14 @@ resource "aws_db_instance" "db" {
   license_model             = var.license_model
 
   tags = {
-    Name           = var.db_name_tag
+    Name           = var.db_name
     CopyDBSnapshot = var.backup_to_other_account ? "True" : "False"
   }
 }
 
-resource "aws_security_group" "db_sg" {
-  vpc_id      = data.aws_vpc.vpc.id
-  name        = var.db_sg_name
-  description = var.db_sg_name
-
-  tags = {
-    Name = var.db_sg_name
-  }
-}
-
-data "aws_route53_zone" "route53_zone" {
-  name         = "internal.vy.no"
-  private_zone = true
-}
-
 resource "aws_route53_record" "db_internal_route53_record" {
-  zone_id = data.aws_route53_zone.route53_zone.zone_id
-  name    = "${var.db_name_tag}.db.internal.vy.no"
+  zone_id = var.db_route53_hosted_zone_id
+  name    = "${var.db_identifier}.${var.db_route53_hosted_zone_name}"
   type    = "CNAME"
   ttl     = 5
   records = [aws_db_instance.db.address]
