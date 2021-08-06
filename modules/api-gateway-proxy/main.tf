@@ -26,6 +26,7 @@ resource "aws_api_gateway_method" "proxy_method" {
   authorization = "NONE"
   request_parameters = {
     "method.request.path.proxy" = true
+    "method.request.header.X-Vy-Proxied-By-CF" = true
   }
 }
 
@@ -42,6 +43,7 @@ resource "aws_api_gateway_integration" "proxy_integration" {
   timeout_milliseconds = 29000
   request_parameters = {
     "integration.request.path.proxy" = "method.request.path.proxy"
+    "integration.request.header.X-Vy-Proxied-By-CF" = "method.request.header.X-Vy-Proxied-By-CF"
   }
 }
 
