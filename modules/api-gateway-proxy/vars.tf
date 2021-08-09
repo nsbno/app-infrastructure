@@ -12,5 +12,5 @@ variable "destination_uri" {
 
 variable "stage_name" {
   type    = string
-  default = "prod"
+  default = "default"
 }

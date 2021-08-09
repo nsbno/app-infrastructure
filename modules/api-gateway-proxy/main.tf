@@ -47,10 +47,15 @@ resource "aws_api_gateway_integration" "proxy_integration" {
   }
 }
 
+resource "aws_api_gateway_stage" "prod_stage" {
+  deployment_id = aws_api_gateway_deployment.prod_deployment.id
+  rest_api_id = data.aws_api_gateway_rest_api.microservices_api.id
+  stage_name = var.stage_name
+}
+
 resource "aws_api_gateway_deployment" "prod_deployment" {
   depends_on  = [aws_api_gateway_integration.proxy_integration]
   rest_api_id = data.aws_api_gateway_rest_api.microservices_api.id
-  stage_name  = var.stage_name
 
   triggers = {
     redeployment = sha1(join(",", list(
