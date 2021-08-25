@@ -39,7 +39,7 @@ resource "pagerduty_service" "backend_service" {
   support_hours {
     type         = "fixed_time_per_day"
     days_of_week = [1, 2, 3, 4, 5, 6, 7]
-    start_time   = "07:00:00"
+    start_time   = "06:00:00"
     end_time     = "23:00:00"
     time_zone    = "Europe/Stockholm"
   }
