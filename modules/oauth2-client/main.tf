@@ -2,6 +2,10 @@ data "aws_cognito_user_pools" "user_pool" {
   name = "${var.vpc_name}-microservice-clients"
 }
 
+data "aws_kms_alias" "vpc_key" {
+  name = "alias/${var.vpc_name}_vpc"
+}
+
 resource "aws_cognito_user_pool_client" "client" {
   name                          = "${var.env}-${var.appname}"
   user_pool_id                  = sort(data.aws_cognito_user_pools.user_pool.ids)[0]
@@ -36,6 +40,22 @@ resource "aws_secretsmanager_secret_version" "client_credentials_value" {
     "oauth2.clientSecret"     = aws_cognito_user_pool_client.client.client_secret,
     "oauth2.tokenEndpointUrl" = "https://${data.aws_cognito_user_pools.user_pool.name}.auth.eu-central-1.amazoncognito.com/oauth2/token"
   })
+}
+
+resource "aws_ssm_parameter" "client_id" {
+  count  = local.should_add_secret_to_secrets_manager
+  name   = "/config/${var.appname}/${var.env}/oauth2/client_id"
+  type   = "SecureString"
+  value  = aws_cognito_user_pool_client.client.id
+  key_id = data.aws_kms_alias.vpc_key.id
+}
+
+resource "aws_ssm_parameter" "client_credentials" {
+  count  = local.should_add_secret_to_secrets_manager
+  name   = "/config/${var.appname}/${var.env}/oauth2/client_secret"
+  type   = "SecureString"
+  value  = aws_cognito_user_pool_client.client.client_secret
+  key_id = data.aws_kms_alias.vpc_key.id
 }
 
 data "aws_iam_policy_document" "secret_policy_document" {
