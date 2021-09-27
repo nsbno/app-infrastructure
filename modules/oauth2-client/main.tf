@@ -82,8 +82,8 @@ data "aws_iam_policy_document" "secret_policy_document" {
       "ssm:GetParameter"
     ]
     resources = [
-      aws_ssm_parameter.client_id.arn,
-      aws_ssm_parameter.client_credentials.arn
+      aws_ssm_parameter.client_id[0].arn,
+      aws_ssm_parameter.client_credentials[0].arn
     ]
   }
 }
