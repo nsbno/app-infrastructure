@@ -76,6 +76,16 @@ data "aws_iam_policy_document" "secret_policy_document" {
 
     resources = ["*"]
   }
+
+  statement {
+    actions = [
+      "ssm:GetParameter"
+    ]
+    resources = [
+      aws_ssm_parameter.client_id.arn,
+      aws_ssm_parameter.client_credentials.arn
+    ]
+  }
 }
 
 resource "aws_iam_policy" "policy" {
