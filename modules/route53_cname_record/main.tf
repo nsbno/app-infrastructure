@@ -8,5 +8,9 @@ resource "aws_route53_record" "environment_route53_record" {
   type    = "CNAME"
   ttl     = var.route53_record_ttl
   records = [var.route53_record]
+
+  weighted_routing_policy {
+    weight = var.weight
+  }
 }
 
