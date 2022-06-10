@@ -96,10 +96,12 @@ variable "db_route53_hosted_zone_id" {
 }
 
 variable "deletion_protection" {
+  type = bool
   default = false
 }
 
 variable "monitoring_interval" {
+  type = number
   default = 0
 }
 
