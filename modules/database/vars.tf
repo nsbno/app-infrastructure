@@ -95,3 +95,11 @@ variable "db_route53_hosted_zone_id" {
   type = string
 }
 
+variable "deletion_protection" {
+  type = bool
+}
+
+variable "monitoring_interval" {
+  type = number
+}
+

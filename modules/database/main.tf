@@ -46,6 +46,8 @@ resource "aws_db_instance" "db" {
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = "${var.db_identifier}-final-snapshot"
   license_model             = var.license_model
+  deletion_protection     = var.deletion_protection
+  monitoring_interval     = var.monitoring_interval
 
   tags = {
     Name           = var.db_name
