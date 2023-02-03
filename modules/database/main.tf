@@ -2,7 +2,7 @@ resource "random_string" "rds_username" {
   count   = var.db_username != "" ? 0 : 1
   length  = 10
   special = false
-  number  = false
+  numeric = false
 }
 
 resource "random_string" "rds_password" {
