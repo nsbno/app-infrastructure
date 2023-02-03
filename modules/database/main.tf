@@ -25,7 +25,7 @@ resource "aws_ssm_parameter" "rds_password" {
 }
 
 resource "aws_db_instance" "db" {
-  name                      = var.db_name
+  db_name                   = var.db_name
   identifier                = var.db_identifier
   engine                    = var.db_engine
   engine_version            = var.db_engine_version
