@@ -1,0 +1,10 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: app-infrastructure
+  title: app-infrastructure
+  description: No description yet.
+spec:
+  type: service
+  lifecycle: production
+  owner: team-fellestjenester
